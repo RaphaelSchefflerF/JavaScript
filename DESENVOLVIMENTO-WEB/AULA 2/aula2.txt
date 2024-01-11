@@ -1,0 +1,6 @@
+React JS
+e uma biblioteca JS para criar interfaces 
+Criada pelo Facebook
+baseada em componentes 
+utilisas jsx para renderizar html
+utiliza cria SPA

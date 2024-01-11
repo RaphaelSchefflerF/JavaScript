@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <title>Rick and Morty</title>
+        <style type="text/css">
+            body{
+                text-align: center;
+                font-family: 'Courier New', Courier, monospace;
+                background-color: rgba(255, 0, 38, 0.615);
+                position: relative;
+            }
+            h1{
+                background-color: rgb(39, 13, 87);
+                padding: 20px;
+                border-radius: 10px;
+            }
+            #container{
+                display: none;
+                position: fixed;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                top:0;
+                background: rgba(114, 209, 209, 0.2);
+                z-index: 1;
+            }
+            #container #modal{
+                background-color: #fff;
+                border: 1px solid #999;
+                padding: 50px;
+                z-index: 2;
+            }
+            #lista{
+                list-style: none;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                flex-wrap: wrap;
+            }
+            #lista li{
+                margin: 10px;
+                text-align: center;
+                width: 200px;
+                background-color: rgb(129, 24, 48);
+                padding: 20px;
+                border-radius: 10px;
+            }
+            #lista li img{
+                max-width: 100%;
+                border-radius: 10px;
+            }
+            #lista li:hover{
+                background: rgb(175, 15, 0);
+                cursor:pointer;
+                font-weight: bold;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Personagens</h1>
+        <ul id="lista"></ul>
+        <div id="container">
+
+        </div>
+        <script>
+            fetch('https://rickandmortyapi.com/api/character')
+                .then(function(resposta){
+                    return resposta.json();
+                })
+                .then(function(dados){
+                    renderizarLista(dados.results);
+                });
+
+            function renderizarLista(personagens){
+                var li = '';
+                for(var i in personagens){
+        
+                    li+=`
+                        <li onClick=buscarPersonagem(${personagens[i].id})>
+                            <img src="${personagens[i].image}"/>
+                            ${personagens[i].name}
+                        </li>
+                    `;
+                }
+                document.getElementById('lista').innerHTML=li;
+
+            
+            }
+            function buscarPersonagem(id){
+                fetch(`https://rickandmortyapi.com/api/character/${id}`)
+                .then(function(resposta){
+                    return resposta.json();
+                })
+                .then(function(resposta){
+                    exibirDetalhes(resposta)
+                });
+            }
+
+            function exibirDetalhes(personagem){
+                var modal = `
+                    <div id="modal">
+                        <div>Nome: ${personagem.name}</div>
+                        <div>Origem: ${personagem.origin.name}</div>
+                    </div>
+                `;
+                document.getElementById('container').style.display='block';
+                document.getElementById('container').innerHTML=modal;
+            }
+        </script>
+    </body>
+</html>
