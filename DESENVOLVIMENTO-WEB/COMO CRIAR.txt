@@ -1,0 +1,63 @@
+npm install react-scripts
+
+npx create-react-app loja
+
+npm i -G create-react-app 
+
+npm start
+
+cd loja
+
+
+EXEMPLO DE CRIAR:
+
+npx create-react-app testap1
+
+npm install react-router-dom
+
+npm install axios
+
+npm install antd
+
+
+ axios.get(`http://localhost:3000/api/v1/users`)
+  .then(function(resposta){
+    //deu Certo
+  })
+  .catch(function(erro){
+    //deu errado
+  });
+
+
+
+
+
+
+
+
+npm install react-router-dom   
+
+npm install axios
+
+
+
+
+BACK
+
+npm init
+
+npm install express     
+
+npm install sqlite3 
+
+
+
+
+
+
+
+
+
+
+
+
