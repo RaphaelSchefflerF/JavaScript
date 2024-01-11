@@ -1,0 +1,158 @@
+<div className="sidebar">
+            <div className="logo-section">
+                <img src='./logos.png' alt="logo" width="50" height="50" className="sidebar-logo" />
+                <span className="sidebar-logo-text">AgroPulse</span>
+            </div>
+            <ul className="nav flex-column container-ul asdfgh">
+                {[
+                    { icon: "ocupante.svg", label: "Ocupantes" },
+                    { icon: "faturas.svg", label: "Faturas" },
+                    { icon: "pagamento.svg", label: "Pagamentos" },
+                    { icon: "empregado.svg", label: "Empregados" },
+                    { icon: "calendario.svg", label: "Calendário" },
+                    { icon: "afazer.svg", label: "Afazeres" },
+                    { icon: "analise.svg", label: "Análise" },
+                    { icon: "financeiro.svg", label: "Financeiro" },
+                    { icon: "check-list.svg", label: "Check-List" },
+                ].map(item => (
+                    <li className="nav-item" key={item.label}>
+                        <a type="button" className="botao" href="/gerencia">
+                            <div className="">
+                                <img src={`./icon/${item.icon}`} alt="" />
+                                <span>{item.label}</span>
+                            </div>
+                        </a>
+                    </li>
+                ))}
+            </ul>
+        </div>
+
+CSS
+
+
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background-color: #F0FED8;
+    overflow: auto;
+    padding: 20px;
+    font-family: 'Lato', sans-serif;
+}
+
+.logo-section {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.sidebar-logo-text {
+    font-family: 'Livvic', sans-serif;
+    font-size: 32px;
+    align-self: center;
+    color: #194328;
+}
+
+.botao {
+    display: flex;
+    align-items: center;
+    color: black;
+    text-decoration: none;
+    padding: 10px;
+    transition: background-color 0.3s;
+}
+
+.botao:hover {
+    background-color: #e0e0e0;
+}
+
+.botao img {
+    margin-right: 10px;
+}
+
+CARROSSEL
+
+
+// Carrossel.js
+import React, { useState, useEffect } from 'react';
+import Slider from 'react-slick';
+import Card from 'react-bootstrap/Card';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './../css/PaginaGerencia.css';
+
+const Carrossel = () => {
+  const [noticias, setNoticias] = useState([]);
+  const [mesSelecionado, setMesSelecionado] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://servicodados.ibge.gov.br/api/v3/noticias/?tipo=noticia');
+        const data = await response.json();
+        setNoticias(data.items);
+      } catch (error) {
+        console.error('Erro ao obter dados da API', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const isAgronegocioRelated = (titulo) => {
+    const palavrasChave = ['agronegócio', 'agricultura', 'rural', 'fazenda', 'produção agrícola'];
+    return palavrasChave.some((palavra) => titulo.toLowerCase().includes(palavra));
+  };
+
+  const filterByMonth = (noticia) => {
+    if (!mesSelecionado) {
+      return true;
+    }
+
+    const mesNoticia = new Date(noticia.data_publicacao).getMonth() + 1;
+    return mesNoticia === mesSelecionado;
+  };
+
+  const handleSelectMes = (mes) => {
+    setMesSelecionado(mes);
+  };
+
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+  };
+
+  return (
+    <div className='embranco'>
+      <div id="carouselExampleControls" className="carousel slide" data-ride="carousel">
+        <div className="carousel-inner">
+          {noticias
+            .filter((noticia) => isAgronegocioRelated(noticia.titulo) && filterByMonth(noticia))
+            .map((noticia, index) => (
+              <div key={noticia.id} className={`carousel-item ${index === 0 ? 'active' : ''}`}>
+                <Card>
+                  <Card.Img variant="top" src={noticia.imagens} alt={noticia.titulo} />
+                  <Card.Body>
+                    <Card.Title>{noticia.titulo}</Card.Title>
+                    <Card.Text>{noticia.introducao}</Card.Text>
+                  </Card.Body>
+                </Card>
+              </div>
+            ))}
+        </div>
+        <a className="carousel-control-prev"  role="button" data-slide="prev">
+          <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span className="sr-only">Previous</span>
+        </a>
+        <a className="carousel-control-next"  role="button" data-slide="next">
+          <span className="carousel-control-next-icon" aria-hidden="true"></span>
+          <span className="sr-only">Next</span>
+        </a>
+      </div>
+    </div>
+  );
+};
+
+export default Carrossel;
+
