@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "antd": "^5.9.0",
+    "axios": "^1.5.0",
+    "create-react-app": "^5.0.1",
+    "react-router-dom": "^6.16.0"
+  }
+}
